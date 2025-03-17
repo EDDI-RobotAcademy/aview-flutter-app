@@ -17,18 +17,24 @@ class KakaoAuthRepositoryImpl implements KakaoAuthRepository {
   }
 
   @override
+  Future<void> logout() async {
+    print("KakaoAuthRepositoryImpl logout()");
+    //return await remoteDataSource.logoutWithKakao();
+  }
+
+  @override
   Future<User> fetchUserInfo() async {
     return await remoteDataSource.fetchUserInfoFromKakao();
   }
 
   @override
   Future<String> requestUserToken(
-      String accessToken, String email, String nickname) async {
+      String accessToken, int userId, String email, String nickname) async {
     print(
-        "Requesting user token with accessToken: $accessToken, email: $email, nickname: $nickname");
+        "Requesting user token with accessToken: $accessToken, user_id: $userId, email: $email, nickname: $nickname");
     try {
       final userToken = await remoteDataSource.requestUserTokenFromServer(
-          accessToken, email, nickname);
+          accessToken, userId, email, nickname);
       print("User token obtained: $userToken");
       return userToken;
     } catch (e) {

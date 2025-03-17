@@ -1,8 +1,10 @@
 import 'package:jobstick/home/home_module.dart';
 import 'package:jobstick/kakao_authentication/domain/usecase/login_usecase_impl.dart';
+import 'package:jobstick/kakao_authentication/domain/usecase/logout_usecase_impl.dart';
 import 'package:jobstick/kakao_authentication/infrasturcture/data_sources/kakao_auth_remote_data_source.dart';
 import 'package:jobstick/kakao_authentication/infrasturcture/repository/kakao_auth_repository.dart';
 import 'package:jobstick/kakao_authentication/infrasturcture/repository/kakao_auth_repository_impl.dart';
+import 'kakao_authentication/presentation/providers/kakao_auth_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
@@ -52,6 +54,10 @@ class MyApp extends StatelessWidget {
               update: (_, repository, __) =>
                   LoginUseCaseImpl(repository)
           ),
+          ProxyProvider<KakaoAuthRepository, LogoutUseCaseImpl>(
+              update: (_, repository, __) =>
+                  LogoutUseCaseImpl(repository)
+          ),
           ProxyProvider<KakaoAuthRepository, FetchUserInfoUseCaseImpl>(
             update: (_, repository, __) =>
                 FetchUserInfoUseCaseImpl(repository),
@@ -59,6 +65,14 @@ class MyApp extends StatelessWidget {
           ProxyProvider<KakaoAuthRepository, RequestUserTokenUseCaseImpl>(
             update: (_, repository, __) =>
                 RequestUserTokenUseCaseImpl(repository),
+          ),
+          ChangeNotifierProvider<KakaoAuthProvider>(
+            create: (_) => KakaoAuthProvider(
+              loginUseCase: Provider.of<LoginUseCaseImpl>(_, listen: false),
+              logoutUseCase: Provider.of<LogoutUseCaseImpl>(_, listen: false),
+              fetchUserInfoUseCase: Provider.of<FetchUserInfoUseCaseImpl>(_, listen: false),
+              requestUserTokenUseCase: Provider.of<RequestUserTokenUseCaseImpl>(_, listen: false),
+            ),
           ),
         ],
         child: MaterialApp(

@@ -25,6 +25,22 @@ class KakaoAuthRemoteDataSource {
     }
   }
 
+  Future<void> logoutWithKakao() async {
+    try {
+      if (await isKakaoTalkInstalled()) {
+        await UserApi.instance.logout();
+        print('카카오톡으로 로그아웃 성공!');
+      } else {
+        await UserApi.instance.logout();
+        print('카카오 계정으로 로그아웃 성공');
+      }
+
+    } catch (error) {
+      print("로그인 실패: $error");
+      throw Exception("Kakao 로그아웃 실패!");
+    }
+  }
+
   // 카카오 API에서 사용자 정보를 가져오는 메서드
   Future<User> fetchUserInfoFromKakao() async {
     try {
@@ -38,7 +54,7 @@ class KakaoAuthRemoteDataSource {
   }
 
   Future<String> requestUserTokenFromServer(
-      String accessToken, String email, String nickname) async {
+      String accessToken, int userId, String email, String nickname) async {
     final url =
     Uri.parse('$baseUrl/kakao-oauth/request-user-token'); // Django 서버 URL
 
@@ -54,6 +70,7 @@ class KakaoAuthRemoteDataSource {
           'access_token': accessToken,
           'email': email,
           'nickname': nickname,
+          'user_id': userId,
         }),
       );
 

@@ -1,3 +1,5 @@
+import 'package:jobstick/kakao_authentication/domain/usecase/logout_usecase.dart';
+import 'package:jobstick/kakao_authentication/domain/usecase/logout_usecase_impl.dart';
 import 'package:jobstick/kakao_authentication/presentation/providers/kakao_auth_providers.dart';
 import 'package:jobstick/kakao_authentication/presentation/ui/kakao_login_page.dart';
 import 'package:flutter/material.dart';
@@ -22,8 +24,8 @@ class KakaoAuthModule {
               create: (_) => KakaoAuthRemoteDataSource(baseServerUrl)
           ),
           ProxyProvider<KakaoAuthRemoteDataSource, KakaoAuthRepository>(
-            update: (_, remoteDataSrouce, __) =>
-                KakaoAuthRepositoryImpl(remoteDataSrouce),
+            update: (_, remoteDataSource, __) =>
+                KakaoAuthRepositoryImpl(remoteDataSource),
           ),
           ProxyProvider<KakaoAuthRepository, LoginUseCaseImpl>(
               update: (_, repository, __) =>
@@ -32,6 +34,7 @@ class KakaoAuthModule {
           ChangeNotifierProvider<KakaoAuthProvider>(
             create: (context) => KakaoAuthProvider(
               loginUseCase: context.read<LoginUseCaseImpl>(),
+              logoutUseCase: context.read<LogoutUseCaseImpl>(),
               fetchUserInfoUseCase: context.read<FetchUserInfoUseCaseImpl>(),
               requestUserTokenUseCase: context.read<RequestUserTokenUseCaseImpl>(),
             ),

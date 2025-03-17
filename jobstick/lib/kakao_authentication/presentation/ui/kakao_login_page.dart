@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 
 import '../../../common_ui/custom_app_bar.dart';
 import '../providers/kakao_auth_providers.dart';
+import 'package:jobstick/home/presentation/ui/home_page.dart';
 
 class KakaoLoginPage extends StatefulWidget {
   @override
@@ -34,29 +35,22 @@ class _KakaoLoginPageState extends State<KakaoLoginPage> {
           CustomAppBar(
             body: Consumer<KakaoAuthProvider>(
               builder: (context, provider, child) {
-                if (provider.isLoading) {
+                if (provider.isLoggedIn) {
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context) => HomePage()),
+                    );
+                  });
+                }
+
+                if(provider.isLoading) {
                   return Center(child: CircularProgressIndicator());
                 }
 
                 return Center(
-                  child: provider.isLoggedIn
-                      ? Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        "로그인 성공!",
-                        style: TextStyle(fontSize: 20, color: Colors.white),
-                      )
-                    ],
-                  )
-                      : Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      ElevatedButton(
-                        onPressed: provider.isLoading ? null : () => provider.login(),
-                        child: Text("카카오 로그인"),
-                      )
-                    ],
+                  child: ElevatedButton(onPressed: provider.isLoading ? null : () => provider.login(),
+                  child: Text("카카오 로그인"),
                   ),
                 );
               },

@@ -1,4 +1,5 @@
 import 'package:jobstick/home/presentation/ui/home_page.dart';
+import 'package:jobstick/kakao_authentication/domain/usecase/logout_usecase_impl.dart';
 import 'package:jobstick/kakao_authentication/presentation/providers/kakao_auth_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -55,6 +56,7 @@ class HomeModule {
           ChangeNotifierProvider<KakaoAuthProvider>(
             create: (context) => KakaoAuthProvider(
               loginUseCase: context.read<LoginUseCaseImpl>(),
+              logoutUseCase: context.read<LogoutUseCaseImpl>(),
               fetchUserInfoUseCase: context.read<FetchUserInfoUseCaseImpl>(),
               requestUserTokenUseCase: context.read<RequestUserTokenUseCaseImpl>(),
             ),

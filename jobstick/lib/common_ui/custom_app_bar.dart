@@ -26,15 +26,21 @@ class CustomAppBar extends StatelessWidget {
       children: [
         Consumer<KakaoAuthProvider>(
           builder: (context, provider, child) {
+            if(provider.isLoading) {
+              return AppBar(
+                title: Text("로딩 중"),
+              );
+            }
+
             return AppBar(
               title: SizedBox(
-                height: 50,
-                child: Image.asset(
-                  'images/logo1.png',
-                  fit: BoxFit.fitHeight,
-                ),
+                  height: 50,
+                  child: Image.asset(
+                    'images/logo2.png',
+                    fit: BoxFit.fitHeight,
+                  ),
               ),
-              backgroundColor: Color.fromARGB(255, 11, 84, 220),
+              backgroundColor: Color.fromARGB(255, 32, 100, 227),
               actions: [
                 AppBarAction(
                   icon: Icons.list_alt,

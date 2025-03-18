@@ -49,16 +49,16 @@ if (envFile.exists()) {
 }
 
 // key.properties 경로 확인
-def keystorePropertiesFile = file("${rootProject.projectDir}/key.properties")
-println "key.properties path: ${keystorePropertiesFile.absolutePath}"
+//def keystorePropertiesFile = file("${rootProject.projectDir}/key.properties")
+//println "key.properties path: ${keystorePropertiesFile.absolutePath}"
 
-def keystoreProperties = newProperties()
-if (keystorePropertiesFile.exists()) {
-    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
-    println "keystoreProperties loaded successfully: ${keystoreProperties}"
-} else {
-    throw new GradleException("key.properties not found")
-}
+//def keystoreProperties = newProperties()
+//if (keystorePropertiesFile.exists()) {
+//    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+//    println "keystoreProperties loaded successfully: ${keystoreProperties}"
+//} else {
+//    throw new GradleException("key.properties not found")
+//}
 
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
@@ -119,16 +119,18 @@ android {
     signingConfigs {
         debug {
             storeFile file(debugKeyStorePath)
-            storePassword 'android'
-            keyAlais 'andoriddebugkey'
-            keyPassword 'android'
+//            storeFile file('/home/oem/.android/debug.keystore')  // debug 키스토어 경로
+            storePassword 'android'                              // debug 키스토어 비밀번호
+            keyAlias 'androiddebugkey'                           // debug 키 별칭
+            keyPassword 'android'                                // debug 키 비밀번호
         }
 
         release {
-            storeFile file(keystoreProperties['storeFile'])
-            storePassword keystoreProperties['storePassword']
-            keyAlais keystoreProperties['keyAlias']
-            keyPassword keystoreProperties['keyPassword']
+            storeFile file(releaseKeyStorePath)
+//            storeFile file('/home/oem/release-key.jks')         // release 키스토어 경로
+            storePassword 'your_keystore_password'              // release 키스토어 비밀번호
+            keyAlias 'your_key_alias'                           // release 키 별칭
+            keyPassword 'your_key_password'                     // release 키 비밀번호
         }
     }
 

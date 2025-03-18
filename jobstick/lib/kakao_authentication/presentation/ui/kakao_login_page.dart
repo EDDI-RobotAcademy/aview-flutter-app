@@ -16,7 +16,7 @@ class _KakaoLoginPageState extends State<KakaoLoginPage> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     // 배경 이미지를 미리 로딩 (프리로딩)
-    precacheImage(AssetImage('images/login_bg6.jpg'), context);
+    precacheImage(AssetImage('images/login_bg6.png'), context);
   }
 
   @override
@@ -27,7 +27,7 @@ class _KakaoLoginPageState extends State<KakaoLoginPage> {
         children: [
           // 배경 이미지
           Image.asset(
-            'images/login_bg6.jpg', // 이미지 경로를 실제 프로젝트에 맞게 수정하세요.
+            'images/login_bg6.png', // 이미지 경로를 실제 프로젝트에 맞게 수정하세요.
             fit: BoxFit.cover,
           ),
 

@@ -29,12 +29,12 @@ class KakaoAuthRepositoryImpl implements KakaoAuthRepository {
 
   @override
   Future<String> requestUserToken(
-      String accessToken, int userId, String email, String nickname) async {
+      String accessToken, int userId, String email, String nickname, String gender, String ageRange, String birthyear) async {
     print(
         "Requesting user token with accessToken: $accessToken, user_id: $userId, email: $email, nickname: $nickname");
     try {
       final userToken = await remoteDataSource.requestUserTokenFromServer(
-          accessToken, userId, email, nickname);
+          accessToken, userId, email, nickname, gender, ageRange, birthyear);
       print("User token obtained: $userToken");
       return userToken;
     } catch (e) {

@@ -5,5 +5,5 @@ abstract class KakaoAuthRepository {
   Future<void> logout();
   Future<User> fetchUserInfo();
   Future<String> requestUserToken(
-      String accessToken, int userId, String email, String nickname);
+      String accessToken, int userId, String email, String nickname, String gender, String ageRange, String birthyear);
 }

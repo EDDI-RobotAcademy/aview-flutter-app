@@ -20,13 +20,17 @@ class HomePage extends StatelessWidget {
               fit: BoxFit.cover, // 화면에 꽉 차도록 설정
             ),
           ),
-          child: Center(
-            child: Text(
-              "Use Your JOBSTICK!",
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: Colors.black,
+          child: Align(
+            alignment: Alignment.topCenter,
+            child: Padding(
+              padding: const EdgeInsets.only(top:100),
+              child:Text(
+                "Use Your JOBSTICK!",
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ),
               ),
             ),
           ),

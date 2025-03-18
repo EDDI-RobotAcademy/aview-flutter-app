@@ -54,7 +54,7 @@ class KakaoAuthRemoteDataSource {
   }
 
   Future<String> requestUserTokenFromServer(
-      String accessToken, int userId, String email, String nickname) async {
+      String accessToken, int userId, String email, String nickname, String gender, String ageRange, String birthyear) async {
     final url =
     Uri.parse('$baseUrl/kakao-oauth/request-user-token'); // Django 서버 URL
 
@@ -71,6 +71,9 @@ class KakaoAuthRemoteDataSource {
           'email': email,
           'nickname': nickname,
           'user_id': userId,
+          'gender': gender,
+          'age_range': ageRange,
+          'birthyear': birthyear
         }),
       );
 

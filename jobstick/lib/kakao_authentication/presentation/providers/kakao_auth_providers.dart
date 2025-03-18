@@ -61,9 +61,13 @@ class KakaoAuthProvider with ChangeNotifier {
       final userId = userInfo.id;
       final email = userInfo.kakaoAccount?.email;
       final nickname = userInfo.kakaoAccount?.profile?.nickname;
+      final gender = userInfo.kakaoAccount?.gender?.name ?? "unknown";
+      final ageRange = userInfo.kakaoAccount?.ageRange?.name ?? "unknown";
+      //final birthyear = int.tryParse(userInfo.kakaoAccount?.birthyear.toString() ?? "0") ?? 0;
+      final birthyear = userInfo.kakaoAccount?.birthyear?? "unknown";
 
       _userToken = await requestUserTokenUseCase.execute(
-          _accessToken!, userId, email!, nickname!);
+          _accessToken!, userId, email!, nickname!, gender, ageRange, birthyear);
 
       print("User Token obtained: $_userToken");
 
@@ -74,7 +78,7 @@ class KakaoAuthProvider with ChangeNotifier {
       print("Login successful");
       _isLoading = false;
       notifyListeners();
-      print("호출: $_isLoggedIn");
+
     } catch (e) {
       _isLoggedIn = false;
       _message = "로그인 실패: $e";

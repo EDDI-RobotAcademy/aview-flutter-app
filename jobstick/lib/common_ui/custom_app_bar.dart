@@ -15,6 +15,7 @@ class CustomAppBar extends StatelessWidget {
   final Widget body;
   final String title;
 
+
   CustomAppBar({
     required this.body,
     this.title = 'Home'
@@ -58,6 +59,7 @@ class CustomAppBar extends StatelessWidget {
                 AppBarAction(
                   icon: provider.isLoggedIn ? Icons.logout : Icons.login,
                   tooltip: provider.isLoggedIn ? 'Logout' : 'Login',
+                  iconColor: Colors.white,
                   onPressed: () {
                     if (provider.isLoggedIn) {
                       provider.logout();

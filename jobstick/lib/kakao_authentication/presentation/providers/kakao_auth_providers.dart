@@ -31,7 +31,21 @@ class KakaoAuthProvider with ChangeNotifier {
     required this.logoutUseCase,
     required this.fetchUserInfoUseCase,
     required this.requestUserTokenUseCase,
-  });
+  }) {
+    checkLoginStatus();
+  }
+
+  Future<void> checkLoginStatus() async {
+    String? storedToken = await secureStorage.read(key:'userToken');
+    if(storedToken !=null) {
+      _userToken = storedToken;
+      _isLoggedIn = true;
+    } else {
+      _isLoggedIn = false;
+    }
+    print("로그인 상태:$_isLoggedIn");
+    notifyListeners();
+  }
 
   Future<void> login() async {
     _message = '';
@@ -58,13 +72,12 @@ class KakaoAuthProvider with ChangeNotifier {
       _isLoggedIn = true;
       _message = '로그인 성공';
       print("Login successful");
+      _isLoading = false;
+      notifyListeners();
+      print("호출: $_isLoggedIn");
     } catch (e) {
       _isLoggedIn = false;
       _message = "로그인 실패: $e";
-    } finally {
-      _isLoading = false;
-      notifyListeners();
-      print("🔹 notifyListeners() 호출됨 (로그인)");
     }
   }
 
@@ -77,10 +90,11 @@ class KakaoAuthProvider with ChangeNotifier {
       _accessToken = null;
       _userToken = null;
       _message = "로그아웃 완료";
+      notifyListeners();
+      print("호출: $_isLoggedIn");
+      notifyListeners();
     } catch (e) {
       _message = "로그아웃 실패 $e";
-    } finally {
-      notifyListeners();
     }
   }
 }

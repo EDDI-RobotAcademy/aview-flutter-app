@@ -4,8 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 
+import '../kakao_authentication/domain/usecase/agree_terms_usecase_impl.dart';
 import '../kakao_authentication/domain/usecase/fetch_user_info_usecase_impl.dart';
 import '../kakao_authentication/domain/usecase/login_usecase_impl.dart';
+import '../kakao_authentication/domain/usecase/logout_usecase_impl.dart';
 import '../kakao_authentication/domain/usecase/request_user_token_usecase_impl.dart';
 import '../kakao_authentication/infrasturcture/data_sources/kakao_auth_remote_data_source.dart';
 import '../kakao_authentication/infrasturcture/repository/kakao_auth_repository.dart';
@@ -54,7 +56,9 @@ class HomeModule {
           // 로그인, 사용자 정보, 유저 토큰 등은 전부 내부 state를 변경 할 수 있습니다.
           ChangeNotifierProvider<KakaoAuthProvider>(
             create: (context) => KakaoAuthProvider(
+              //agreeTermsUseCase:  context.read<AgreeTermsUseCaseImpl>(),// ✅ 추가
               loginUseCase: context.read<LoginUseCaseImpl>(),
+              logoutUseCase: context.read<LogoutUseCaseImpl>(),
               fetchUserInfoUseCase: context.read<FetchUserInfoUseCaseImpl>(),
               requestUserTokenUseCase: context.read<RequestUserTokenUseCaseImpl>(),
             ),

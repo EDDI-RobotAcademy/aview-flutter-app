@@ -9,11 +9,15 @@ import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:provider/provider.dart';
 
 
+import 'kakao_authentication/domain/usecase/agree_terms_usecase_impl.dart';
 import 'kakao_authentication/domain/usecase/fetch_user_info_usecase_impl.dart';
+import 'kakao_authentication/domain/usecase/logout_usecase_impl.dart';
 import 'kakao_authentication/domain/usecase/request_user_token_usecase_impl.dart';
 
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_quill/flutter_quill.dart' as quill;
+
+import 'kakao_authentication/presentation/providers/kakao_auth_providers.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -35,49 +39,67 @@ void main() async {
 class MyApp extends StatelessWidget {
   final String baseUrl;
 
-  const MyApp({required this.baseUrl});
+  const MyApp({required this.baseUrl, super.key});
 
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-        providers: [
-          Provider<KakaoAuthRemoteDataSource>(
-              create: (_) => KakaoAuthRemoteDataSource(baseUrl)
+      providers: [
+        Provider<KakaoAuthRemoteDataSource>(
+          create: (_) => KakaoAuthRemoteDataSource(baseUrl),
+        ),
+        ProxyProvider<KakaoAuthRemoteDataSource, KakaoAuthRepository>(
+          update: (context, remoteDataSource, __) =>
+              KakaoAuthRepositoryImpl(remoteDataSource),
+        ),
+        /*
+        ProxyProvider<KakaoAuthRepository, AgreeTermsUseCaseImpl>(
+          update: (context, repository, __) =>
+              AgreeTermsUseCaseImpl(repository),
+        ),*/
+        ProxyProvider<KakaoAuthRepository, LoginUseCaseImpl>(
+          update: (context, repository, __) =>
+              LoginUseCaseImpl(repository),
+        ),
+        ProxyProvider<KakaoAuthRepository, LogoutUseCaseImpl>(
+          update: (context, repository, __) =>
+              LogoutUseCaseImpl(repository),
+        ),
+        ProxyProvider<KakaoAuthRepository, FetchUserInfoUseCaseImpl>(
+          update: (context, repository, __) =>
+              FetchUserInfoUseCaseImpl(repository),
+        ),
+        ProxyProvider<KakaoAuthRepository, RequestUserTokenUseCaseImpl>(
+          update: (context, repository, __) =>
+              RequestUserTokenUseCaseImpl(repository),
+        ),
+        ChangeNotifierProvider<KakaoAuthProvider>(
+          create: (context) => KakaoAuthProvider(
+            //agreeTermsUseCase:  context.read<AgreeTermsUseCaseImpl>(),// ✅ 추가
+            loginUseCase: context.read<LoginUseCaseImpl>(),
+            logoutUseCase: context.read<LogoutUseCaseImpl>(),
+            fetchUserInfoUseCase: context.read<FetchUserInfoUseCaseImpl>(),
+            requestUserTokenUseCase: context.read<RequestUserTokenUseCaseImpl>(),
           ),
-          ProxyProvider<KakaoAuthRemoteDataSource, KakaoAuthRepository>(
-            update: (_, remoteDataSrouce, __) =>
-                KakaoAuthRepositoryImpl(remoteDataSrouce),
-          ),
-          ProxyProvider<KakaoAuthRepository, LoginUseCaseImpl>(
-              update: (_, repository, __) =>
-                  LoginUseCaseImpl(repository)
-          ),
-          ProxyProvider<KakaoAuthRepository, FetchUserInfoUseCaseImpl>(
-            update: (_, repository, __) =>
-                FetchUserInfoUseCaseImpl(repository),
-          ),
-          ProxyProvider<KakaoAuthRepository, RequestUserTokenUseCaseImpl>(
-            update: (_, repository, __) =>
-                RequestUserTokenUseCaseImpl(repository),
-          ),
+        ),
+      ],
+      child: MaterialApp(
+        title: 'Flutter Demo',
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+          useMaterial3: true,
+        ),
+        localizationsDelegates: [
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          quill.FlutterQuillLocalizations.delegate,
         ],
-        child: MaterialApp(
-          title: 'Flutter Demo',
-          theme: ThemeData(
-            colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-            useMaterial3: true,
-          ),
-          localizationsDelegates: [
-            GlobalMaterialLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-            quill.FlutterQuillLocalizations.delegate, // Add this line to fix the error
-          ],
-          supportedLocales: [
-            Locale('en', 'US'), // Add supported locales
-            Locale('ko', 'KR'), // For example, support Korean
-          ],
-          home: HomeModule.provideHomePage(),
-        )
+        supportedLocales: [
+          Locale('en', 'US'),
+          Locale('ko', 'KR'),
+        ],
+        home: HomeModule.provideHomePage(),
+      ),
     );
   }
 }

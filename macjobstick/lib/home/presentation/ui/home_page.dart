@@ -16,7 +16,7 @@ class HomePage extends StatelessWidget {
         body: Container(
           decoration: BoxDecoration(
             image: DecorationImage(
-              image: AssetImage("images/logo_white_background.jpg"),
+              image: AssetImage("images/home_bg2.jpg"),
               fit: BoxFit.cover, // 화면에 꽉 차도록 설정
             ),
           ),

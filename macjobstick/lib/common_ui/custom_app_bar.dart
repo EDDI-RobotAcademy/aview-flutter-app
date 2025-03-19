@@ -2,8 +2,10 @@ import 'package:macjobstick/board/board_module.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:provider/provider.dart';
 
 import '../kakao_authentication/kakao_auth_module.dart';
+import '../kakao_authentication/presentation/providers/kakao_auth_providers.dart';
 import 'app_bar_action.dart';
 
 class CustomAppBar extends StatelessWidget {
@@ -13,6 +15,7 @@ class CustomAppBar extends StatelessWidget {
   final Widget body;
   final String title;
 
+
   CustomAppBar({
     required this.body,
     this.title = 'Home'
@@ -20,47 +23,62 @@ class CustomAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return Column(
       children: [
-        AppBar(
-          title: SizedBox(
-            height: 50, // 높이 조정
-            child: Image.asset(
-              'images/logo_transparent_background.png',
-              fit: BoxFit.fitHeight, // 원본 비율 유지하면서 크기 맞춤
-            ),
-          ),
-          backgroundColor: Color.fromARGB(255, 11, 84, 220),
-          actions: [
-            AppBarAction(
-                icon: Icons.list_alt,
-                tooltip: '게시물 리스트',
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => BoardModule.provideBoardListPage(),
-                    ),
-                  );
-                }
-            ),
-            AppBarAction(
-              icon: Icons.login,
-              tooltip: 'Login',
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => KakaoAuthModule.provideKakaoLoginPage()
-                  ),
-                );
-              },
-            ),
-          ],
+        Consumer<KakaoAuthProvider>(
+          builder: (context, provider, child) {
+            if(provider.isLoading) {
+              return AppBar(
+                title: Text("로딩 중"),
+              );
+            }
 
+            return AppBar(
+              title: SizedBox(
+                height: 50,
+                child: Image.asset(
+                  'images/logo2.png',
+                  fit: BoxFit.fitHeight,
+                ),
+              ),
+              backgroundColor: Color.fromARGB(255, 32, 100, 227),
+              actions: [
+                AppBarAction(
+                  icon: Icons.list_alt,
+                  tooltip: '게시물 리스트',
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            BoardModule.provideBoardListPage(),
+                      ),
+                    );
+                  },
+                ),
+                AppBarAction(
+                  icon: provider.isLoggedIn ? Icons.logout : Icons.login,
+                  tooltip: provider.isLoggedIn ? 'Logout' : 'Login',
+                  iconColor: Colors.white,
+                  onPressed: () {
+                    if (provider.isLoggedIn) {
+                      provider.logout();
+                    } else {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              KakaoAuthModule.provideKakaoLoginPage(),
+                        ),
+                      );
+                    }
+                  },
+                ),
+              ],
+            );
+          },
         ),
-        Expanded(child: body)
+        Expanded(child: body),
       ],
     );
   }

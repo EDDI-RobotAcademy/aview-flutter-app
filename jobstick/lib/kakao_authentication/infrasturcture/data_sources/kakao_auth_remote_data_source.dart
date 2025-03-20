@@ -12,10 +12,10 @@ class KakaoAuthRemoteDataSource {
       OAuthToken token;
       if (await isKakaoTalkInstalled()) {
         token = await UserApi.instance.loginWithKakaoTalk();
-        print('카카오톡으로 로그인 성공: ${token.accessToken}');
+        print('카카오톡으로 로그인 실행: ${token.accessToken}');
       } else {
         token = await UserApi.instance.loginWithKakaoAccount();
-        print('카카오 계정으로 로그인 성공: ${token.accessToken}');
+        print('카카오 계정으로 로그인 실행: ${token.accessToken}');
       }
 
       return token.accessToken;
@@ -29,10 +29,10 @@ class KakaoAuthRemoteDataSource {
     try {
       if (await isKakaoTalkInstalled()) {
         await UserApi.instance.logout();
-        print('카카오톡으로 로그아웃 성공!');
+        print('카카오톡으로 로그아웃 실행');
       } else {
         await UserApi.instance.logout();
-        print('카카오 계정으로 로그아웃 성공');
+        print('카카오 계정으로 로그아웃 실행');
       }
 
     } catch (error) {

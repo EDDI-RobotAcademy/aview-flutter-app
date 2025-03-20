@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import '../../../common_ui/custom_app_bar.dart';
 import '../providers/kakao_auth_providers.dart';
 import 'package:jobstick/home/presentation/ui/home_page.dart';
+import 'kakao_terms_and_conditions.dart'; // 약관 추가
 
 class KakaoLoginPage extends StatefulWidget {
   @override
@@ -35,22 +36,34 @@ class _KakaoLoginPageState extends State<KakaoLoginPage> {
           CustomAppBar(
             body: Consumer<KakaoAuthProvider>(
               builder: (context, provider, child) {
-                if (provider.isLoggedIn) {
-                  WidgetsBinding.instance.addPostFrameCallback((_) {
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(builder: (context) => HomePage()),
-                    );
-                  });
-                }
-
-                if(provider.isLoading) {
+                if (provider.isLoading) {
                   return Center(child: CircularProgressIndicator());
                 }
 
                 return Center(
-                  child: ElevatedButton(onPressed: provider.isLoading ? null : () => provider.login(),
-                  child: Text("카카오 로그인"),
+                  child: ElevatedButton(
+                    onPressed: provider.isLoggedIn ? null : () async {
+                      bool isAgreed = await kakaoTermsAndConditions(context);
+                      if (!isAgreed) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text("개인정보 이용 약관에 동의해야 합니다.")),
+                        );
+                        return;
+                      }
+
+                      await provider.login();
+
+                      if (provider.isLoggedIn) {
+                        if (mounted) {
+                          Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(builder: (context) => HomePage()),
+                                (Route<dynamic> route) => false,
+                          );
+                        }
+                      }
+                    },
+                    child: Text("카카오 로그인"),
                   ),
                 );
               },

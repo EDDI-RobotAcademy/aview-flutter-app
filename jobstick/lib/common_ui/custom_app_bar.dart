@@ -25,21 +25,23 @@ class CustomAppBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Consumer<KakaoAuthProvider>(
+        Consumer<KakaoAuthProvider>(  // KakaoAuthProvider 상태를 반영
           builder: (context, provider, child) {
-            if(provider.isLoading) {
+            // 로딩 상태일 때 처리
+            if (provider.isLoading) {
               return AppBar(
                 title: Text("로딩 중"),
               );
             }
 
+            // 로그인 상태에 따라 아이콘 변경
             return AppBar(
               title: SizedBox(
-                  height: 50,
-                  child: Image.asset(
-                    'images/logo2.png',
-                    fit: BoxFit.fitHeight,
-                  ),
+                height: 50,
+                child: Image.asset(
+                  'images/logo2.png',
+                  fit: BoxFit.fitHeight,
+                ),
               ),
               backgroundColor: Color.fromARGB(255, 32, 100, 227),
               actions: [
@@ -50,8 +52,7 @@ class CustomAppBar extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) =>
-                            BoardModule.provideBoardListPage(),
+                        builder: (context) => BoardModule.provideBoardListPage(),
                       ),
                     );
                   },
@@ -60,19 +61,23 @@ class CustomAppBar extends StatelessWidget {
                   icon: provider.isLoggedIn ? Icons.logout : Icons.login,
                   tooltip: provider.isLoggedIn ? 'Logout' : 'Login',
                   iconColor: Colors.white,
-                  onPressed: () {
-                    if (provider.isLoggedIn) {
-                      provider.logout();
-                    } else {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              KakaoAuthModule.provideKakaoLoginPage(),
-                        ),
-                      );
+                    onPressed: () async{
+                      if (provider.isLoggedIn) {
+                        await provider.logout();
+                        Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(builder: (context) => KakaoAuthModule.provideKakaoLoginPage()),
+                              (route) => false, // 이전의 모든 라우트 삭제
+                        );// 로그아웃 실행
+                      } else {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => KakaoAuthModule.provideKakaoLoginPage(),
+                          ),
+                        );
+                      }
                     }
-                  },
                 ),
               ],
             );

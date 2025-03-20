@@ -19,7 +19,7 @@ class KakaoAuthRepositoryImpl implements KakaoAuthRepository {
   @override
   Future<void> logout() async {
     print("KakaoAuthRepositoryImpl logout()");
-    //return await remoteDataSource.logoutWithKakao();
+    return await remoteDataSource.logoutWithKakao();
   }
 
   @override

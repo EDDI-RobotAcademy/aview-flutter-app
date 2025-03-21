@@ -49,20 +49,20 @@ if (envFile.exists()) {
 }
 
 // key.properties 경로 확인
-//def keystorePropertiesFile = file("${rootProject.projectDir}/key.properties")
-//println "key.properties path: ${keystorePropertiesFile.absolutePath}"
+def keystorePropertiesFile = file("${rootProject.projectDir}/key.properties")
+println "key.properties path: ${keystorePropertiesFile.absolutePath}"
 
-//def keystoreProperties = newProperties()
-//if (keystorePropertiesFile.exists()) {
-//    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
-//    println "keystoreProperties loaded successfully: ${keystoreProperties}"
-//} else {
-//    throw new GradleException("key.properties not found")
-//}
+def keystoreProperties = new Properties()
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+    println "keystoreProperties loaded successfully: ${keystoreProperties}"
+} else {
+    throw new GradleException("key.properties not found")
+}
 
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
+//apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 android {
     namespace = "com.example.jobstick"
@@ -90,13 +90,10 @@ android {
     }
 
     def isWindows = System.getProperty("os.name").toLowerCase().contains("win")
-    def debugKeyStorePath = isWindows ? 'D:/Key/debug.keystore' : '/home/oem/.android/debug.keystore'
-    def releaseKeyStorePath = isWindows ? 'D:/Key/release-key.jks' : '/home/oem/.android/release-key.jks'
-
-    //경로확인 코드, 나중에 제거
+    def debugKeyStorePath = isWindows ? 'C:/Users/Playdata/.android/jobstick/debug.keystore' : '/home/oem/.android/debug.keystore'
+    def releaseKeyStorePath = isWindows ? 'C:/Users/Playdata/.android/jobstick/release-key.jks' : '/home/oem/.android/release-key.jks'
     println "Debug Keystore Path: ${debugKeyStorePath}"
     println "Release Keystore Path: ${releaseKeyStorePath}"
-
 
 //    signingConfigs {
 //        debug {
@@ -119,18 +116,16 @@ android {
     signingConfigs {
         debug {
             storeFile file(debugKeyStorePath)
-//            storeFile file('/home/oem/.android/debug.keystore')  // debug 키스토어 경로
-            storePassword 'android'                              // debug 키스토어 비밀번호
-            keyAlias 'androiddebugkey'                           // debug 키 별칭
-            keyPassword 'android'                                // debug 키 비밀번호
+            storePassword 'android'
+            keyAlias 'androiddebugkey'
+            keyPassword 'android'
         }
 
         release {
-            storeFile file(releaseKeyStorePath)
-//            storeFile file('/home/oem/release-key.jks')         // release 키스토어 경로
-            storePassword 'your_keystore_password'              // release 키스토어 비밀번호
-            keyAlias 'your_key_alias'                           // release 키 별칭
-            keyPassword 'your_key_password'                     // release 키 비밀번호
+            storeFile file(keystoreProperties['storeFile'])
+            storePassword keystoreProperties['storePassword']
+            keyAlias keystoreProperties['keyAlias']
+            keyPassword keystoreProperties['keyPassword']
         }
     }
 
@@ -147,6 +142,7 @@ android {
         release {
             signingConfig signingConfigs.release  // release 빌드에 release 서명 사용
             minifyEnabled true                   // 코드 난독화 활성화
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             manifestPlaceholders = [
                     kakaoAppKey: project.KAKAO_NATIVE_APP_KEY,
@@ -169,11 +165,11 @@ android {
         ]
     }
 
-    //buildTypes {
-    //    release {
-    //        // TODO: Add your own signing config for the release build.
-    //        // Signing with the debug keys for now, so `flutter run --release` works.
-    //        signingConfig = signingConfigs.debug
+//    buildTypes {
+//        release {
+//            // TODO: Add your own signing config for the release build.
+//            // Signing with the debug keys for now, so `flutter run --release` works.
+//            signingConfig = signingConfigs.debug
 //        }
 //    }
 }

@@ -1,10 +1,9 @@
-import 'package:jobstick/kakao_authentication/domain/usecase/login_usecase.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:jobstick/kakao_authentication/domain/usecase/fetch_user_info_usecase.dart';
+import 'package:jobstick/kakao_authentication/domain/usecase/login_usecase.dart';
 import 'package:jobstick/kakao_authentication/domain/usecase/logout_usecase.dart';
-
-import '../../domain/usecase/fetch_user_info_usecase.dart';
-import '../../domain/usecase/request_user_token_usecase.dart';
+import 'package:jobstick/kakao_authentication/domain/usecase/request_user_token_usecase.dart';
 
 class KakaoAuthProvider with ChangeNotifier {
   final LoginUseCase loginUseCase;
@@ -12,7 +11,6 @@ class KakaoAuthProvider with ChangeNotifier {
   final FetchUserInfoUseCase fetchUserInfoUseCase;
   final RequestUserTokenUseCase requestUserTokenUseCase;
 
-  // Nuxt localStorage와 같은 역할
   final FlutterSecureStorage secureStorage = FlutterSecureStorage();
 
   String? _accessToken;
@@ -21,7 +19,6 @@ class KakaoAuthProvider with ChangeNotifier {
   bool _isLoading = false;
   String _message = '';
 
-  // 해당 변수 값을 즉시 가져올 수 있도록 구성
   bool get isLoggedIn => _isLoggedIn;
   bool get isLoading => _isLoading;
   String get message => _message;
@@ -31,65 +28,81 @@ class KakaoAuthProvider with ChangeNotifier {
     required this.logoutUseCase,
     required this.fetchUserInfoUseCase,
     required this.requestUserTokenUseCase,
-  });
+  }) {
+    _initAuthState(); // 앱 시작 시 로그인 상태 확인
+  }
 
+  // 초기 로그인 상태 확인
+  Future<void> _initAuthState() async {
+    _isLoading = true;
+    notifyListeners();
+    try {
+      _userToken = await secureStorage.read(key: 'userToken');
+      _isLoggedIn = _userToken != null;
+      print("초기 로그인 상태: $_isLoggedIn");
+    } catch (e) {
+      print("초기화 오류: $e");
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  // 로그인 처리
+  // 로그인 처리
   Future<void> login() async {
-    _message = '';
+    _isLoading = true;
+    notifyListeners();  // 상태 변경 알림
 
     try {
-      print("Kakao loginUseCase.execute()");
       _accessToken = await loginUseCase.execute();
-      print("AccessToken obtained: $_accessToken");
-
       final userInfo = await fetchUserInfoUseCase.execute();
-      print("User Info fetched: $userInfo");
-
-      final userId = userInfo.id;
-      final email = userInfo.kakaoAccount?.email;
-      final nickname = userInfo.kakaoAccount?.profile?.nickname;
-      final gender = userInfo.kakaoAccount?.gender?.name ?? "unknown";
-      final ageRange = userInfo.kakaoAccount?.ageRange?.name ?? "unknown";
-      //final birthyear = int.tryParse(userInfo.kakaoAccount?.birthyear.toString() ?? "0") ?? 0;
-      final birthyear = userInfo.kakaoAccount?.birthyear?? "unknown";
-
       _userToken = await requestUserTokenUseCase.execute(
-          _accessToken!, userId, email!, nickname!, gender, ageRange, birthyear);
-
-      print("User Token obtained: $_userToken");
+        _accessToken!,
+        userInfo.id,
+        userInfo.kakaoAccount?.email ?? '',
+        userInfo.kakaoAccount?.profile?.nickname ?? '',
+        userInfo.kakaoAccount?.gender?.name ?? 'unknown',
+        userInfo.kakaoAccount?.ageRange?.name ?? 'unknown',
+        userInfo.kakaoAccount?.birthyear ?? 'unknown',
+      );
 
       await secureStorage.write(key: 'userToken', value: _userToken);
 
       _isLoggedIn = true;
       _message = '로그인 성공';
-      print("Login successful");
-      _isLoading = false;
-      notifyListeners();
 
+      // 로그인 후 상태 초기화 호출
+      await _initAuthState();
     } catch (e) {
       _isLoggedIn = false;
       _message = "로그인 실패: $e";
+    } finally {
+      _isLoading = false;
+      notifyListeners();  // 상태 변경 알림
     }
   }
 
+  // 로그아웃 처리
   Future<void> logout() async {
+    _isLoading = true;
+    notifyListeners();  // 상태 변경 알림
+
     try {
-      // 로그아웃 실행
       await logoutUseCase.execute();
       await secureStorage.delete(key: 'userToken');
-
-      // 상태 초기화
       _isLoggedIn = false;
       _accessToken = null;
       _userToken = null;
       _message = '로그아웃 완료';
 
-      // 상태 업데이트
-      notifyListeners();
-      print("로그아웃 완료");
-
+      // 로그아웃 후 상태 초기화 호출
+      await _initAuthState();
     } catch (e) {
-      _message = "로그아웃 실패 $e";
-      print("로그아웃 실패: $e");
+      _message = "로그아웃 실패: $e";
+    } finally {
+      _isLoading = false;
+      notifyListeners();  // 상태 변경 알림
     }
   }
 }

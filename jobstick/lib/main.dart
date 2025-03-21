@@ -42,56 +42,57 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-        providers: [
-          Provider<KakaoAuthRemoteDataSource>(
-              create: (_) => KakaoAuthRemoteDataSource(baseUrl)
-          ),
-          ProxyProvider<KakaoAuthRemoteDataSource, KakaoAuthRepository>(
-            update: (_, remoteDataSrouce, __) =>
-                KakaoAuthRepositoryImpl(remoteDataSrouce),
-          ),
-          ProxyProvider<KakaoAuthRepository, LoginUseCaseImpl>(
-              update: (_, repository, __) =>
-                  LoginUseCaseImpl(repository)
-          ),
-          ProxyProvider<KakaoAuthRepository, LogoutUseCaseImpl>(
-              update: (_, repository, __) =>
-                  LogoutUseCaseImpl(repository)
-          ),
-          ProxyProvider<KakaoAuthRepository, FetchUserInfoUseCaseImpl>(
-            update: (_, repository, __) =>
-                FetchUserInfoUseCaseImpl(repository),
-          ),
-          ProxyProvider<KakaoAuthRepository, RequestUserTokenUseCaseImpl>(
-            update: (_, repository, __) =>
-                RequestUserTokenUseCaseImpl(repository),
-          ),
-          ChangeNotifierProvider<KakaoAuthProvider>(
-            create: (_) => KakaoAuthProvider(
-              loginUseCase: Provider.of<LoginUseCaseImpl>(_, listen: false),
-              logoutUseCase: Provider.of<LogoutUseCaseImpl>(_, listen: false),
-              fetchUserInfoUseCase: Provider.of<FetchUserInfoUseCaseImpl>(_, listen: false),
-              requestUserTokenUseCase: Provider.of<RequestUserTokenUseCaseImpl>(_, listen: false),
-            ),
-          ),
+      providers: [
+        Provider<KakaoAuthRemoteDataSource>(
+          create: (_) => KakaoAuthRemoteDataSource(baseUrl),
+        ),
+        ProxyProvider<KakaoAuthRemoteDataSource, KakaoAuthRepository>(
+          update: (_, remoteDataSource, __) =>
+              KakaoAuthRepositoryImpl(remoteDataSource),
+        ),
+        ProxyProvider<KakaoAuthRepository, LoginUseCaseImpl>(
+          update: (_, repository, __) => LoginUseCaseImpl(repository),
+        ),
+        ProxyProvider<KakaoAuthRepository, LogoutUseCaseImpl>(
+          update: (_, repository, __) => LogoutUseCaseImpl(repository),
+        ),
+        ProxyProvider<KakaoAuthRepository, FetchUserInfoUseCaseImpl>(
+          update: (_, repository, __) => FetchUserInfoUseCaseImpl(repository),
+        ),
+        ProxyProvider<KakaoAuthRepository, RequestUserTokenUseCaseImpl>(
+          update: (_, repository, __) =>
+              RequestUserTokenUseCaseImpl(repository),
+        ),
+        ProxyProvider4<LoginUseCaseImpl, LogoutUseCaseImpl,
+            FetchUserInfoUseCaseImpl, RequestUserTokenUseCaseImpl,
+            KakaoAuthProvider>(
+          update: (_, loginUseCase, logoutUseCase, fetchUserInfoUseCase,
+              requestUserTokenUseCase, __) =>
+              KakaoAuthProvider(
+                loginUseCase: loginUseCase,
+                logoutUseCase: logoutUseCase,
+                fetchUserInfoUseCase: fetchUserInfoUseCase,
+                requestUserTokenUseCase: requestUserTokenUseCase,
+              ),
+        ),
+      ],
+      child: MaterialApp(
+        title: 'Flutter Demo',
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+          useMaterial3: true,
+        ),
+        localizationsDelegates: [
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          quill.FlutterQuillLocalizations.delegate,
         ],
-        child: MaterialApp(
-          title: 'Flutter Demo',
-          theme: ThemeData(
-            colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-            useMaterial3: true,
-          ),
-          localizationsDelegates: [
-            GlobalMaterialLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-            quill.FlutterQuillLocalizations.delegate, // Add this line to fix the error
-          ],
-          supportedLocales: [
-            Locale('en', 'US'), // Add supported locales
-            Locale('ko', 'KR'), // For example, support Korean
-          ],
-          home: HomeModule.provideHomePage(),
-        )
+        supportedLocales: [
+          Locale('en', 'US'),
+          Locale('ko', 'KR'),
+        ],
+        home: HomeModule.provideHomePage(),
+      ),
     );
   }
 }

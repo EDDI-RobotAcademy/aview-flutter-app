@@ -40,7 +40,8 @@ class _KakaoLoginPageState extends State<KakaoLoginPage> {
                   return Center(child: CircularProgressIndicator());
                 }
 
-                return Center(
+                return Align(
+                  alignment: Alignment(0.0, -0.15),
                   child: ElevatedButton(
                     onPressed: provider.isLoggedIn ? null : () async {
                       bool isAgreed = await kakaoTermsAndConditions(context);
@@ -63,7 +64,26 @@ class _KakaoLoginPageState extends State<KakaoLoginPage> {
                         }
                       }
                     },
-                    child: Text("카카오 로그인"),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.transparent,
+                      shadowColor: Colors.transparent,
+                      minimumSize: Size(150,50),
+                      padding: EdgeInsets.zero,
+                    ),
+                    child: Ink(
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: AssetImage('images/btn_login_kakao.png'),
+                          fit: BoxFit.cover,
+                        ),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Container(
+                        width: 150,
+                        height: 50,
+                        alignment: Alignment.center,
+                      ),
+                    ),
                   ),
                 );
               },

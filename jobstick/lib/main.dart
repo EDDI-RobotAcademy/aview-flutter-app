@@ -26,6 +26,10 @@ void main() async {
   String kakaoNativeAppKey = dotenv.env['KAKAO_NATIVE_APP_KEY'] ?? '';
   String kakaoJavaScriptAppKey = dotenv.env['KAKAO_JAVASCRIPT_APP_KEY'] ?? '';
 
+  String naverClientId = dotenv.env['NAVER_CLIENT_ID'] ?? '';
+  String naverClientSecret = dotenv.env['NAVER_CLIENT_SECRET'] ?? '';
+  String naverClientName = dotenv.env['NAVER_CLIENT_NAME'] ?? '';
+
   KakaoSdk.init(
     nativeAppKey: kakaoNativeAppKey,
     javaScriptAppKey: kakaoJavaScriptAppKey,

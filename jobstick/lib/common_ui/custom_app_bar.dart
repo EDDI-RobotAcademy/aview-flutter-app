@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 
 import '../kakao_authentication/kakao_auth_module.dart';
 import '../simple_chat/simple_chat_module.dart';
+import '../common_ui/login_page.dart';
 import 'app_bar_action.dart';
 
 class CustomAppBar extends StatelessWidget {
@@ -93,7 +94,7 @@ class CustomAppBar extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => KakaoAuthModule.provideKakaoLoginPage(),
+                          builder: (context) => LoginPage(),
                         ),
                       );
                     }

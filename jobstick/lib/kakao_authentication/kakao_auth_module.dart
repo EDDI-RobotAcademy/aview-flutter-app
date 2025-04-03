@@ -1,4 +1,3 @@
-import 'package:jobstick/kakao_authentication/domain/usecase/logout_usecase.dart';
 import 'package:jobstick/kakao_authentication/domain/usecase/logout_usecase_impl.dart';
 import 'package:jobstick/kakao_authentication/presentation/providers/kakao_auth_providers.dart';
 import 'package:jobstick/kakao_authentication/presentation/ui/kakao_login_page.dart';

@@ -4,6 +4,7 @@ import 'package:jobstick/google_authentication/presentation/ui/google_login_page
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
+import 'package:provider/single_child_widget.dart';
 
 import 'domain/usecase/fetch_user_info_usecase_impl.dart';
 import 'domain/usecase/login_usecase_impl.dart';
@@ -13,33 +14,29 @@ import 'infrasturcture/repository/google_auth_repository.dart';
 import 'infrasturcture/repository/google_auth_repository_impl.dart';
 
 class GoogleAuthModule {
-  static Widget provideGoogleLoginPage() {
+  static List<SingleChildWidget> provideGoogleAuthProviders() { // ✅ List<SingleChildWidget> 반환하도록 수정
     dotenv.load();
     String baseServerUrl = dotenv.env['BASE_URL'] ?? '';
 
-    return MultiProvider(
-        providers: [
-          Provider<GoogleAuthRemoteDataSource>(
-              create: (_) => GoogleAuthRemoteDataSource(baseServerUrl)
-          ),
-          ProxyProvider<GoogleAuthRemoteDataSource, GoogleAuthRepository>(
-            update: (_, remoteDataSource, __) =>
-                GoogleAuthRepositoryImpl(remoteDataSource),
-          ),
-          ProxyProvider<GoogleAuthRepository, LoginUseCaseImpl>(
-              update: (_, repository, __) =>
-                  LoginUseCaseImpl(repository)
-          ),
-          ChangeNotifierProvider<GoogleAuthProvider>(
-            create: (context) => GoogleAuthProvider(
-              loginUseCase: context.read<LoginUseCaseImpl>(),
-              logoutUseCase: context.read<LogoutUseCaseImpl>(),
-              fetchUserInfoUseCase: context.read<FetchUserInfoUseCaseImpl>(),
-              requestUserTokenUseCase: context.read<RequestUserTokenUseCaseImpl>(),
-            ),
-          ),
-        ],
-        child: GoogleLoginPage()
-    );
+    return [
+      Provider<GoogleAuthRemoteDataSource>(
+        create: (_) => GoogleAuthRemoteDataSource(baseServerUrl),
+      ),
+      ProxyProvider<GoogleAuthRemoteDataSource, GoogleAuthRepository>(
+        update: (_, remoteDataSource, __) =>
+            GoogleAuthRepositoryImpl(remoteDataSource),
+      ),
+      ProxyProvider<GoogleAuthRepository, LoginUseCaseImpl>(
+        update: (_, repository, __) => LoginUseCaseImpl(repository),
+      ),
+      ChangeNotifierProvider<GoogleAuthProvider>(
+        create: (context) => GoogleAuthProvider(
+          loginUseCase: context.read<LoginUseCaseImpl>(),
+          logoutUseCase: context.read<LogoutUseCaseImpl>(),
+          fetchUserInfoUseCase: context.read<FetchUserInfoUseCaseImpl>(),
+          requestUserTokenUseCase: context.read<RequestUserTokenUseCaseImpl>(),
+        ),
+      ),
+    ];
   }
 }

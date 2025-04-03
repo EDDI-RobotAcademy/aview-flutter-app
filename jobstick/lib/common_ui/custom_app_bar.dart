@@ -4,11 +4,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:jobstick/kakao_authentication/presentation/providers/kakao_auth_providers.dart';
+import 'package:jobstick/authentication/auth_module.dart';
 import 'package:provider/provider.dart';
 
 import '../kakao_authentication/kakao_auth_module.dart';
 import '../simple_chat/simple_chat_module.dart';
-import '../common_ui/login_page.dart';
 import 'app_bar_action.dart';
 
 class CustomAppBar extends StatelessWidget {
@@ -86,7 +86,7 @@ class CustomAppBar extends StatelessWidget {
                       Navigator.pushAndRemoveUntil(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => KakaoAuthModule.provideKakaoLoginPage(),
+                          builder: (context) => InterviewModule.provideInterviewListPage(),
                         ),
                             (route) => false,
                       );
@@ -94,7 +94,7 @@ class CustomAppBar extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => LoginPage(),
+                          builder: (context) => LoginModule(),
                         ),
                       );
                     }

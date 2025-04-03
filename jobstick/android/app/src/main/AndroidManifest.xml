@@ -57,7 +57,6 @@
             </intent-filter>
         </activity>
 
-
         <activity
             android:name="com.kakao.sdk.flutter.AuthCodeCustomTabsActivity"
             android:exported="true">
@@ -81,6 +80,9 @@
                     android:scheme="kakao${kakaoAppKey}" />
             </intent-filter>
         </activity>
+
+
+
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
         <meta-data

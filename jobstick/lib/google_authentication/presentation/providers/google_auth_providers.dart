@@ -74,6 +74,7 @@ class GoogleAuthProvider with ChangeNotifier {
 
       _isLoggedIn = true;
       _message = '로그인 성공';
+      print("accesstoken:${_accessToken}");
 
       // 로그인 후 상태 초기화 호출
       await _initAuthState();

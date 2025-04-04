@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:jobstick/common_ui/custom_app_bar.dart';
 import 'package:provider/provider.dart';
+import 'package:jobstick/common_ui/custom_app_bar.dart';
 
 import 'package:jobstick/home/home_module.dart';
 import 'package:jobstick/kakao_authentication/presentation/providers/kakao_auth_providers.dart';
@@ -25,6 +27,13 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(56), // AppBar 높이 설정
+        child: CustomAppBar(
+          title: "로그인",
+          body: Container(), // ✅ body 추가
+        ),
+      ),
       body: Stack(
         fit: StackFit.expand,
         children: [

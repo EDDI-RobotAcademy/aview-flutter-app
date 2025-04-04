@@ -4,10 +4,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:jobstick/kakao_authentication/presentation/providers/kakao_auth_providers.dart';
+import 'package:jobstick/google_authentication/presentation/providers/google_auth_providers.dart';
 import 'package:jobstick/authentication/auth_module.dart';
 import 'package:provider/provider.dart';
 
-import '../kakao_authentication/kakao_auth_module.dart';
 import '../simple_chat/simple_chat_module.dart';
 import 'app_bar_action.dart';
 
@@ -27,8 +27,10 @@ class CustomAppBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Consumer<KakaoAuthProvider>(
-          builder: (context, provider, child) {
+        Consumer2<KakaoAuthProvider, GoogleAuthProvider>(
+          builder: (context, kakaoProvider, googleProvider, child) {
+            final bool isLoggedIn =
+                kakaoProvider.isLoggedIn || googleProvider.isLoggedIn;
             return AppBar(
               title: SizedBox(
                 height: 50,
@@ -77,16 +79,21 @@ class CustomAppBar extends StatelessWidget {
                   },
                 ),
                 AppBarAction(
-                  icon: provider.isLoggedIn ? Icons.logout : Icons.login,
-                  tooltip: provider.isLoggedIn ? 'Logout' : 'Login',
+                  icon: isLoggedIn ? Icons.logout : Icons.login,
+                  tooltip: isLoggedIn ? 'Logout' : 'Login',
                   iconColor: Colors.white,
                   onPressed: () async {
-                    if (provider.isLoggedIn) {
-                      await provider.logout();
+                    if (isLoggedIn) {
+                      if(kakaoProvider.isLoggedIn) {
+                        await kakaoProvider.logout();
+                      }
+                      if(googleProvider.isLoggedIn) {
+                        await googleProvider.logout();
+                      }
                       Navigator.pushAndRemoveUntil(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => InterviewModule.provideInterviewListPage(),
+                          builder: (context) => LoginModule(),
                         ),
                             (route) => false,
                       );

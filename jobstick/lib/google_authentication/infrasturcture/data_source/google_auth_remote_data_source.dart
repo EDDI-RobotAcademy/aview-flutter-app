@@ -37,17 +37,23 @@ class GoogleAuthRemoteDataSource {
   // 구글 API에서 사용자 정보를 가져오는 메서드
   Future<GoogleSignInAccount?> fetchUserInfoFromGoogle() async {
     try {
-      final GoogleSignInAccount? user = _googleSignIn.currentUser;
+      GoogleSignInAccount? user = _googleSignIn.currentUser;
 
       if (user == null) {
-        print("현재 로그인된 Google 사용자가 없음");
+        print("현재 로그인된 Google 사용자가 없음, 자동 로그인 시도");
+        user = await _googleSignIn.signInSilently();
+        print("결과: $user");
+      }
+
+      if (user == null) {
+        print("자동 로그인 실패, 사용자 정보 없음");
         return null;
       }
 
-      print("Google 사용자 정보: ${user.displayName}, ${user.email}");
+      print("Google 사용자 정보: ${user.displayName ?? '이름 없음'}, ${user.email ?? '이메일 없음'}");
       return user;
     } catch (error) {
-      print('Error fetching user info: $error');
+      print('❌ Error fetching user info: $error');
       throw Exception('Failed to fetch user info from Google');
     }
   }

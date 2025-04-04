@@ -27,6 +27,7 @@
     <application
         android:label="jobstick"
         android:name="${applicationName}"
+        android:icon="@mipmap/logo1"
         android:usesCleartextTraffic="true">
 
         <!-- 🔹 S3 TransferService 추가 -->

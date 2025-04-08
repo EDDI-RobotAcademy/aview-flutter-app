@@ -65,7 +65,7 @@ apply plugin: 'kotlin-android'
 //apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 android {
-    namespace = "com.example.jobstick"
+    namespace = "com.jobstick"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
@@ -80,7 +80,7 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId = "com.example.jobstick"
+        applicationId = "com.jobstick"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = flutter.minSdkVersion
@@ -90,8 +90,8 @@ android {
     }
 
     def isWindows = System.getProperty("os.name").toLowerCase().contains("win")
-    def debugKeyStorePath = isWindows ? 'D:/Key/debug.keystore' : '/home/oem/.android/debug.keystore'
-    def releaseKeyStorePath = isWindows ? 'D:/Key/release-key.jks' : '/home/oem/.android/release-key.jks'
+    def debugKeyStorePath = isWindows ? 'C:/Users/Playdata/.android/jobstick/debug.keystore' : '/home/oem/.android/debug.keystore'
+    def releaseKeyStorePath = isWindows ? 'C:/Users/Playdata/.android/jobstick/release-key.jks' : '/home/oem/.android/release-key.jks'
     println "Debug Keystore Path: ${debugKeyStorePath}"
     println "Release Keystore Path: ${releaseKeyStorePath}"
 
@@ -153,7 +153,7 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId "com.example.jobstick"
+        applicationId "com.jobstick"
         minSdkVersion 24
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()

@@ -1,4 +1,4 @@
-package com.example.jobstick
+package com.jobstick
 
 import io.flutter.embedding.android.FlutterActivity
 

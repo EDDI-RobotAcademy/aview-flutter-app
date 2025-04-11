@@ -26,11 +26,8 @@ class Interview {
     };
   }
 
-  // JSON 데이터를 Interview 객체로 변환
   factory Interview.fromJson(Map<String, dynamic> json) {
     try {
-      print('JSON 변환 시작: $json');
-
       return Interview(
         id: json['interviewId'] ?? 0,
         title: json['title'] ?? 'No Title',
@@ -40,7 +37,6 @@ class Interview {
         createDate: json['createDate'] ?? 'Unknown',
       );
     } catch (e) {
-      print('JSON 파싱 중 오류: $json, Error: $e');
       rethrow;
     }
   }

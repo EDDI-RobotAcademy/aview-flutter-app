@@ -25,6 +25,9 @@ class CustomAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print("CustomAppBar apiUrl: ${apiUrl}");
+    print("CustomAppBar apiKey: ${apiKey}");
+
     return Column(
       children: [
         Consumer2<KakaoAuthProvider, GoogleAuthProvider>(

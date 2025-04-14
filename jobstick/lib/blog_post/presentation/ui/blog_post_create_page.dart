@@ -61,6 +61,8 @@ class _BlogPostCreatePageState extends State<BlogPostCreatePage> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
+        child: SizedBox( // ✅ 추가
+          height: double.infinity, // ✅ 추가
         child: Consumer<BlogPostCreateProvider>( // BlogPostCreateProvider를 활용해 데이터 바인딩
           builder: (context, provider, child) {
             return Column(
@@ -165,6 +167,7 @@ class _BlogPostCreatePageState extends State<BlogPostCreatePage> {
           },
         ),
       ),
+      )
     );
   }
 

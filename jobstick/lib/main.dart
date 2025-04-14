@@ -24,7 +24,6 @@ import 'package:jobstick/google_authentication/infrasturcture/repository/google_
 import 'package:jobstick/google_authentication/infrasturcture/repository/google_auth_repository_impl.dart';
 import 'package:jobstick/google_authentication/presentation/providers/google_auth_providers.dart';
 
-
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_quill/flutter_quill.dart' as quill;
 
@@ -127,12 +126,13 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
           useMaterial3: true,
         ),
-        localizationsDelegates: [
+        localizationsDelegates: const [
           GlobalMaterialLocalizations.delegate,
           GlobalWidgetsLocalizations.delegate,
-          quill.FlutterQuillLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate, // ✅ 추가
+          quill.FlutterQuillLocalizations.delegate, // ✅ 추가
         ],
-        supportedLocales: [
+        supportedLocales: const [
           Locale('en', 'US'),
           Locale('ko', 'KR'),
         ],

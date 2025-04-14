@@ -8,6 +8,7 @@ import 'package:jobstick/google_authentication/presentation/providers/google_aut
 import 'package:jobstick/authentication/auth_module.dart';
 import 'package:provider/provider.dart';
 
+import '../blog_post/blog_post_module.dart';
 import '../simple_chat/simple_chat_module.dart';
 import 'app_bar_action.dart';
 
@@ -44,6 +45,18 @@ class CustomAppBar extends StatelessWidget {
               ),
               backgroundColor: Color.fromARGB(255, 32, 100, 227),
               actions: [
+                AppBarAction(
+                  icon: Icons.article,
+                  tooltip: 'Blog Posts',
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => BlogPostModule.provideBlogPostListPage(),
+                      ),
+                    );
+                  },
+                ),
                 AppBarAction(
                   icon: Icons.list_alt,
                   tooltip: '게시물 리스트',

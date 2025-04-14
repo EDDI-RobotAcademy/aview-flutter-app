@@ -25,4 +25,28 @@ class AwsS3Utility {
       throw Exception('Error downloading file: $e');
     }
   }
+
+  static Future<void> deleteFile(String domain, String fileName) async {
+    final String s3Url = 'https://$bucketName.s3.$region.amazonaws.com/$domain/$fileName';
+
+    try {
+      // S3에서 파일을 삭제합니다
+      final response = await http.delete(
+        Uri.parse(s3Url),
+        headers: {
+          'Content-Type': 'application/xml',
+          'Authorization': 'AWS $accessKey:$secretKey', // 인증 정보 필요
+        },
+      );
+
+      if (response.statusCode == 204) {
+        print('File deleted successfully');
+      } else {
+        throw Exception('Failed to delete file: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error deleting file: $e');
+      throw Exception('Error deleting file: $e');
+    }
+  }
 }

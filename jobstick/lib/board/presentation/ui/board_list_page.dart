@@ -60,6 +60,7 @@ class _BoardListPageState extends State<BoardListPage> {
           child: CustomAppBar(
             body: Container(),
             title: '게시판',
+            showBackButton: false, // 🔥 이 한 줄로 화살표 제거됨
           ),
         ),
         body: SafeArea(

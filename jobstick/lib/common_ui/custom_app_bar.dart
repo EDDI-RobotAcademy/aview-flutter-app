@@ -18,10 +18,12 @@ class CustomAppBar extends StatelessWidget {
 
   final Widget body;
   final String title;
+  final bool showBackButton;
 
   CustomAppBar({
     required this.body,
-    this.title = 'Home'
+    this.title = 'Home',
+    this.showBackButton = true,
   });
 
   @override
@@ -36,6 +38,7 @@ class CustomAppBar extends StatelessWidget {
             final bool isLoggedIn =
                 kakaoProvider.isLoggedIn || googleProvider.isLoggedIn;
             return AppBar(
+              automaticallyImplyLeading: showBackButton,
               title: GestureDetector(
                 onTap: () {
                   Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);

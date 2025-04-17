@@ -25,6 +25,7 @@ class _SimpleChatPageState extends State<SimpleChatPage> {
         child: CustomAppBar(
           body: Container(),
           title: 'Simple Chat',
+          showBackButton: false, // ✅ 이 한 줄 추가하면 뒤로가기 안 보임
         ),
       ),
       body: SingleChildScrollView(

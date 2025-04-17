@@ -55,6 +55,7 @@ class _BlogPostListPageState extends State<BlogPostListPage> {
         child: CustomAppBar(
           body: Container(),
           title: '블로그 게시판',
+          showBackButton: false, // 🔥 이 한 줄로 화살표 제거됨
         ),
       ),
       body: SafeArea(

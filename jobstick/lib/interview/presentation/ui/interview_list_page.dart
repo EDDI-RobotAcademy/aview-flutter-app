@@ -54,6 +54,7 @@ class _InterviewListPageState extends State<InterviewListPage> {
         child: CustomAppBar(
           body: Container(),
           title: '인터뷰 목록',
+          showBackButton: false,
         ),
       ),
       body: SafeArea(

@@ -18,10 +18,12 @@ class CustomAppBar extends StatelessWidget {
 
   final Widget body;
   final String title;
+  final bool showBackButton;
 
   CustomAppBar({
     required this.body,
-    this.title = 'Home'
+    this.title = 'Home',
+    this.showBackButton = true,
   });
 
   @override
@@ -36,13 +38,20 @@ class CustomAppBar extends StatelessWidget {
             final bool isLoggedIn =
                 kakaoProvider.isLoggedIn || googleProvider.isLoggedIn;
             return AppBar(
-              title: SizedBox(
-                height: 50,
-                child: Image.asset(
-                  'images/logo2.png',
-                  fit: BoxFit.fitHeight,
+              automaticallyImplyLeading: showBackButton,
+              title: GestureDetector(
+                onTap: () {
+                  Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
+                },
+                child: SizedBox(
+                  height: 50,
+                  child: Image.asset(
+                    'images/logo2.png',
+                    fit: BoxFit.fitHeight,
+                  ),
                 ),
               ),
+
               backgroundColor: Color.fromARGB(255, 32, 100, 227),
               actions: [
                 AppBarAction(

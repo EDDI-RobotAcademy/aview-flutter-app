@@ -4,6 +4,8 @@ import 'package:jobstick/kakao_authentication/kakao_auth_module.dart';
 import 'package:jobstick/google_authentication/google_auth_module.dart';
 import 'package:jobstick/authentication/presentation/ui/login_page.dart';
 
+import '../home/presentation/ui/home_page.dart';
+
 class LoginModule extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -14,6 +16,9 @@ class LoginModule extends StatelessWidget {
         ],
       child: MaterialApp(
         home: LoginPage(),
+        routes: {
+        '/home': (context) => HomePage(), // ✅ 여기에 추가!
+        },
       ),
     );
   }
